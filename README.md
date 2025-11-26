@@ -14,7 +14,7 @@ The analysis uses R to:
 - **Stevens Pass** (Site ID: 791)
 - **Olallie Meadows** (Snoqualmie Pass area, Site ID: 672)
 - **Paradise** (Mt. Rainier, Site ID: 679)
-- **Wells Creek** (Mt. Baker area, Site ID: 908)
+- **Wells Creek** (Mt. Baker area, Site ID: 909)
 
 ## How to Run
 1.  Ensure R is installed.
