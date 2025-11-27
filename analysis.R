@@ -32,15 +32,17 @@ oni_data <- oni_data %>%
     rename(year_val = yr) %>% # Rename 'yr' to 'year_val'
     mutate(
         month_num = case_when(
-            seas == "DJF" ~ 1, seas == "JFM" ~ 2, seas == "FMA" ~ 3, seas == "MAM" ~ 4,
-            seas == "AMJ" ~ 5, seas == "MJJ" ~ 6, seas == "JJA" ~ 7, seas == "JAS" ~ 8,
-            seas == "ASO" ~ 9, seas == "SON" ~ 10, seas == "OND" ~ 11, seas == "NDJ" ~ 12
+            seas == "DJF" ~ 1, seas == "JFM" ~ 2, seas == "FMA" ~ 3,
+            seas == "MAM" ~ 4, seas == "AMJ" ~ 5, seas == "MJJ" ~ 6,
+            seas == "JJA" ~ 7, seas == "JAS" ~ 8, seas == "ASO" ~ 9,
+            seas == "SON" ~ 10, seas == "OND" ~ 11, seas == "NDJ" ~ 12
         ),
         # Adjust year: DJF is usually assigned to the year of January.
         # In the file, "DJF 1950" usually means Dec 1949 - Feb 1950.
         # We want the date to represent the center month or the start.
-        # Let's use the first month of the season for simplicity, or just use month_num.
-        # If SEAS=DJF, month_num=1 (Jan). Year is 1950. So Jan 1950.
+        # Let's use the first month of the season for simplicity, or just
+        # use month_num. If SEAS=DJF, month_num=1 (Jan).
+        # Year is 1950. So Jan 1950.
         date = make_date(year_val, month_num, 1)
     )
 
@@ -73,7 +75,10 @@ enso_seasonal <- oni_data %>%
 # 679: Paradise (Mt Rainier)
 # 909: Wells Creek (Mt Baker area)
 site_ids <- c(791, 672, 679, 909)
-message("Downloading SNOTEL data for sites: ", paste(site_ids, collapse = ", "))
+message(
+    "Downloading SNOTEL data for sites: ",
+    paste(site_ids, collapse = ", ")
+)
 
 snotel_raw <- snotel_download(site_id = site_ids, internal = TRUE)
 
@@ -98,7 +103,8 @@ snow_data <- snotel_raw %>%
     filter(snow_water_equivalent >= 0)
 
 # Calculate Monthly Means per Season per Site
-# Let's calculate "Monthly Total New SWE" (sum of positive daily increments).
+# Let's calculate "Monthly Total New SWE"
+# (sum of positive daily increments).
 # Then "Average" across years.
 snow_data_daily_diff <- snow_data %>%
     group_by(site_name, season_year) %>%
@@ -131,7 +137,10 @@ write_csv(enso_seasonal, "data/enso_classification.csv")
 # Factor ordering for plots
 month_levels <- c(11, 12, 1, 2, 3, 4)
 month_labels <- c("Nov", "Dec", "Jan", "Feb", "Mar", "Apr")
-enso_levels <- c("Strong La Nina", "Weak La Nina", "Neutral", "Weak El Nino", "Strong El Nino")
+enso_levels <- c(
+    "Strong La Nina", "Weak La Nina", "Neutral",
+    "Weak El Nino", "Strong El Nino"
+)
 enso_colors <- c(
     "Strong La Nina" = "blue",
     "Weak La Nina" = "lightblue",
@@ -142,7 +151,11 @@ enso_colors <- c(
 
 analysis_data <- analysis_data %>%
     mutate(
-        month_fac = factor(month, levels = month_levels, labels = month_labels),
+        month_fac = factor(
+            month,
+            levels = month_levels,
+            labels = month_labels
+        ),
         enso_fac = factor(enso_phase, levels = enso_levels)
     )
 
@@ -155,13 +168,27 @@ monthly_avg_by_phase <- analysis_data %>%
         .groups = "drop"
     )
 
-p1 <- ggplot(monthly_avg_by_phase, aes(x = month_fac, y = avg_swe, color = enso_fac, group = enso_fac)) +
+p1 <- ggplot(
+    monthly_avg_by_phase,
+    aes(
+        x = month_fac,
+        y = avg_swe,
+        color = enso_fac,
+        group = enso_fac
+    )
+) +
     geom_line(linewidth = 1.2) +
     geom_point(size = 2) +
     facet_wrap(~site_name, scales = "free_y") +
     scale_color_manual(values = enso_colors) +
     labs(
-        title = paste("Average Monthly New SWE by ENSO Phase (", min(analysis_data$season_year), "-", max(analysis_data$season_year), ")", sep = ""),
+        title = paste0(
+            "Average Monthly New SWE by ENSO Phase (",
+            min(analysis_data$season_year),
+            "-",
+            max(analysis_data$season_year),
+            ")"
+        ),
         subtitle = "WA Cascades SNOTEL Sites",
         x = "Month",
         y = "Average New SWE (inches)",
@@ -184,22 +211,37 @@ seasonal_totals <- analysis_data %>%
 neutral_avgs <- seasonal_totals %>%
     filter(enso_fac == "Neutral") %>%
     group_by(site_name) %>%
-    summarise(neutral_mean = mean(season_total_swe, na.rm = TRUE), .groups = "drop")
+    summarise(
+        neutral_mean = mean(season_total_swe, na.rm = TRUE),
+        .groups = "drop"
+    )
 
 diff_analysis <- seasonal_totals %>%
     group_by(site_name, enso_fac) %>%
-    summarise(phase_mean = mean(season_total_swe, na.rm = TRUE), .groups = "drop") %>%
+    summarise(
+        phase_mean = mean(season_total_swe, na.rm = TRUE),
+        .groups = "drop"
+    ) %>%
     left_join(neutral_avgs, by = "site_name") %>%
     mutate(
         pct_diff = (phase_mean - neutral_mean) / neutral_mean * 100
     ) %>%
     filter(enso_fac != "Neutral") # Remove Neutral (0% diff)
 
-p2 <- ggplot(diff_analysis, aes(x = site_name, y = pct_diff, fill = enso_fac)) +
+p2 <- ggplot(
+    diff_analysis,
+    aes(x = site_name, y = pct_diff, fill = enso_fac)
+) +
     geom_col(position = "dodge") +
     scale_fill_manual(values = enso_colors) +
     labs(
-        title = paste("Snowfall % Difference from Neutral Years (", min(analysis_data$season_year), "-", max(analysis_data$season_year), ")", sep = ""),
+        title = paste0(
+            "Snowfall % Difference from Neutral Years (",
+            min(analysis_data$season_year),
+            "-",
+            max(analysis_data$season_year),
+            ")"
+        ),
         y = "% Difference in Seasonal SWE",
         x = "Site",
         fill = "ENSO Phase",

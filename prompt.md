@@ -1,6 +1,6 @@
 [ Antigravity prompt settings: ^Planning ^Gemini 3 Pro (High) ]
 
-Write an R script which reproduces the following analysis, including generation of all plots, as well as the web scraping steps needed to download and import real data from respected sources. Use pacman::p_load() for loading R packages. Produce an implementation plan in Markdown, write the code, then test and debug. Plots should show the data year range in the title and data source in the caption. The full path to Rscript.exe is: "/usr/local/bin/Rscript". Save data as CSV files in "data" folder and plots as PNG files in "plots" folder.
+Write an R script which reproduces the following analysis, including generation of all plots, as well as the web scraping steps needed to download and import real data from respected sources. Use pacman::p_load() for loading R packages. Produce an implementation plan in Markdown, write the code, then test and debug. Plots should show the data year range in the title and data source in the caption. The full path to Rscript.exe is: "/usr/local/bin/Rscript". Save data as CSV files in "data" folder and plots as PNG files in "plots" folder. Make sure to line-wrap the R code so that lines are <= 80 characters long. Indent and space the code according to common best practice style for R.
 
 - Science question:
   - How do El Niño & La Niña climate patterns relate to snowfall in WA Cascades?
