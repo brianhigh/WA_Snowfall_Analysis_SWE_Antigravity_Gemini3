@@ -91,6 +91,8 @@ snow_data <- snotel_raw %>%
     mutate(
         site_name = str_to_title(site_name), # Capitalize site names
         date = as.Date(date),
+        # Convert SWE from mm to inches (snotelr returns mm by default)
+        snow_water_equivalent = snow_water_equivalent / 25.4,
         month = month(date),
         year = year(date),
         day = day(date),

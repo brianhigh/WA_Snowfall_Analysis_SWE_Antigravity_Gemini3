@@ -16,3 +16,10 @@ Write an R script which reproduces the following analysis, including generation 
   - Strong La Nina (blue), Weak La Nina (light blue), Neutral (light purple),
     Weak El Nino (light red), Strong El Nino (red)
 - Save the Walkthough.md as README.md in Markdown format.
+
+NOTE: As the snowfall (SWE) values seemed rather high, I issued an additional prompt:
+
+"The SWE values seem to be rather large. The plots report the units as inches, but it seems more like mm. If it really is in mm, convert to inches. The documentation for snotel_download() implies the default units are metric, but if metric = FALSE is set, would this return values in inches? If so, please make this change, as the desired units in the plots should be imperial units."
+
+This resulted in the desired change, as the SWE values were converted to inches.
+
