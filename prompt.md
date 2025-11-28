@@ -27,7 +27,17 @@ NOTE: Even with this change in units, I found that Claude Sonnet 4.5 produced sl
 
 "I see your results from analysis.R differ somewhat from those gemini3 produced from gemini3_analysis.R, even though the data sources, units, etc. seem the same, at least for the three SNOTEL sites you share in common. What's the reason for this difference? Who is correct, you or Gemini3?"
 
-Claude found a logic bug in the Gemini approach and so I asked Gemini to fix it:
+Claude found two logic bugs in the Gemini approach ...
+
+- Gemini classifies ENSO years based on the average anomaly across the entire 6-month snow season (Nov-Apr). I use the standard DJF (December-January-February) average, which is the scientific convention for defining ENSO winters.
+- On November 1st of every year, Gemini's script treats the entire existing snowpack (if any) as "new snow" because it compares the Nov 1st value to 0 (the default lag value).
+
+... and made the following suggestions ...
+
+- ENSO Classification: Switching to the standard DJF (Dec-Jan-Feb) window for defining ENSO phases.
+- Data Processing: Calculating daily snowfall on the continuous dataset before filtering for the snow season to eliminate the "November 1st artifact."
+
+... and so I switched models back to Gemini 3 Pro (High) and asked Gemini to fix it:
 
 "Since Claude's methodology sounds more correct, please correct analysis.R to use Claude's better methodology."
 
