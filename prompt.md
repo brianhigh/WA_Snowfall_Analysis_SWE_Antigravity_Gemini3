@@ -23,3 +23,14 @@ NOTE: As the snowfall (SWE) values seemed rather high, I issued an additional pr
 
 This resulted in the desired change, as the SWE values were converted to inches.
 
+NOTE: Even with this change in units, I found that Claude Sonnet 4.5 produced slightly different results, so I gave Claude this prompt:
+
+"I see your results from analysis.R differ somewhat from those gemini3 produced from gemini3_analysis.R, even though the data sources, units, etc. seem the same, at least for the three SNOTEL sites you share in common. What's the reason for this difference? Who is correct, you or Gemini3?"
+
+Claude found a logic bug in the Gemini approach and so I asked Gemini to fix it:
+
+"Since Claude's methodology sounds more correct, please correct analysis.R to use Claude's better methodology."
+
+That appears to have resolved the difference.
+
+

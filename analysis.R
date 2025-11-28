@@ -54,8 +54,9 @@ oni_data <- oni_data %>%
     )
 
 # Calculate Seasonal ENSO Strength
+# CORRECTED METHODOLOGY: Use DJF (Dec-Jan-Feb) for ENSO classification
 enso_seasonal <- oni_data %>%
-    filter(month_num %in% c(11, 12, 1, 2, 3, 4)) %>%
+    filter(month_num %in% c(12, 1, 2)) %>%
     group_by(season_year) %>%
     summarise(mean_anom = mean(anom, na.rm = TRUE)) %>%
     mutate(
@@ -99,23 +100,22 @@ snow_data <- snotel_raw %>%
         # Define Season Year (Nov 2023 -> 2024)
         season_year = if_else(month >= 11, year + 1, year)
     ) %>%
-    # Filter for Snow Season (Nov-Apr)
-    filter(month %in% c(11, 12, 1, 2, 3, 4)) %>%
     # Filter out bad data (negative SWE)
     filter(snow_water_equivalent >= 0)
 
 # Calculate Monthly Means per Season per Site
-# Let's calculate "Monthly Total New SWE"
-# (sum of positive daily increments).
-# Then "Average" across years.
+# CORRECTED METHODOLOGY: Calculate daily diffs BEFORE filtering months
+# to avoid treating existing snow on Nov 1 as "new snow".
 snow_data_daily_diff <- snow_data %>%
-    group_by(site_name, season_year) %>%
+    group_by(site_name) %>% # Group by site only to ensure continuous lag
     arrange(date) %>%
     mutate(
         prev_swe = lag(snow_water_equivalent, default = 0),
         new_swe = pmax(0, snow_water_equivalent - prev_swe)
     ) %>%
-    ungroup()
+    ungroup() %>%
+    # Now filter for Snow Season (Nov-Apr)
+    filter(month %in% c(11, 12, 1, 2, 3, 4))
 
 # Monthly Totals of New SWE
 monthly_snow <- snow_data_daily_diff %>%
