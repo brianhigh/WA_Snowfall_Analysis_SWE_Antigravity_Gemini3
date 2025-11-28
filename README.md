@@ -25,11 +25,11 @@ The analysis uses R to:
     The script will automatically install necessary packages (`pacman`, `tidyverse`, `snotelr`, etc.).
 
 ## Outputs
-### Data (`data/`)
-- `wa_snow_enso_analysis_data.csv`: Processed monthly snowfall and ENSO data.
-- `enso_classification.csv`: ENSO phase classification for each year.
+### Data ([data/](data/))
+- [wa_snow_enso_analysis_data.csv](data/wa_snow_enso_analysis_data.csv): Processed monthly snowfall and ENSO data.
+- [enso_classification.csv](data/enso_classification.csv): ENSO phase classification for each year.
 
-### Plots (`plots/`)
+### Plots ([plots/](plots/))
 - **Monthly Snowfall by ENSO Phase**:
   ![Monthly Snowfall](plots/monthly_snowfall_enso.png)
   *Shows the average monthly new Snow Water Equivalent (SWE) for each ENSO phase.*
