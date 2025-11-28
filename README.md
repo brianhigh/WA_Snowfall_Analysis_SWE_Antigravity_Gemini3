@@ -48,5 +48,6 @@ The analysis uses R to:
 See: [prompt.md](prompt.md) for the prompt used to generate this analysis in 
 Antigravity using Gemini 3 Pro. No manual editing was done to the code, other 
 than to clean up some of the comments. The README was made by Antigravity from 
-the Walkthrough produced by Antigravity. Other than this paragraph, and fixing 
-an incorrect site ID, no other changes were made to the README.
+the Walkthrough produced by Antigravity. Other than this paragraph, linking to 
+some files and fixing an incorrect site ID, no other changes were made to the 
+README.
